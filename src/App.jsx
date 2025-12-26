@@ -7,6 +7,7 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Projects from './components/Projects';
 import Skills from './components/Skills';
+import Pricing from './components/Pricing';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 
@@ -14,12 +15,39 @@ function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [selectedPackage, setSelectedPackage] = useState(null);
 
   useEffect(() => {
     // Check system preference
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
       setDarkMode(true);
     }
+
+    // Check for stored package selection
+    const storedPackage = localStorage.getItem('selectedPackage');
+    if (storedPackage) {
+      setSelectedPackage(JSON.parse(storedPackage));
+    }
+
+    // Intersection Observer for active section
+    const sections = document.querySelectorAll('section[id]');
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.3
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(section => observer.observe(section));
+
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -35,6 +63,7 @@ function App() {
     { name: 'About', href: '#about' },
     { name: 'Projects', href: '#projects' },
     { name: 'Skills', href: '#skills' },
+    { name: 'Pricing', href: '#pricing' },
     { name: 'Contact', href: '#contact' },
   ];
 
@@ -47,10 +76,17 @@ function App() {
     setMobileMenuOpen(false);
   };
 
+  // Handle package selection from Pricing component
+  const handlePackageSelect = (pkg) => {
+    setSelectedPackage(pkg);
+    // Store in localStorage
+    localStorage.setItem('selectedPackage', JSON.stringify(pkg));
+  };
+
   return (
     <div className={`min-h-screen transition-colors duration-300 ${
       darkMode 
-        ? 'dark bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900' 
+        ? 'dark bg-gray-900' 
         : 'bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50'
     }`}>
       {/* Navigation */}
@@ -60,7 +96,8 @@ function App() {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="flex items-center space-x-2"
+              className="flex items-center space-x-2 cursor-pointer"
+              onClick={() => scrollToSection('#home')}
             >
               <div className="w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-pulse"></div>
               <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
@@ -133,12 +170,13 @@ function App() {
       </nav>
 
       {/* Main Content */}
-      <main>
+      <main className="pt-16">
         <Hero />
         <About />
         <Projects />
         <Skills />
-        <Contact />
+        <Pricing onPackageSelect={handlePackageSelect} />
+        <Contact selectedPackage={selectedPackage} />
       </main>
 
       <Footer />
