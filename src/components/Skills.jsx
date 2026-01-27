@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Code, Database, Cloud, Palette, Cpu, Rocket, Zap, TrendingUp } from 'lucide-react';
+import { Code, Database, Cloud, Cpu, Rocket, Zap, TrendingUp, Sparkles } from 'lucide-react';
 
 const Skills = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -27,84 +27,70 @@ const Skills = () => {
     {
       icon: Code,
       title: 'Frontend Development',
-      color: 'from-blue-500 to-cyan-500',
+      color: 'from-cyan-400 to-blue-500',
       skills: [
         { name: 'React', level: 90, description: 'Advanced hooks, context, performance optimization' },
         { name: 'JavaScript (ES6+)', level: 88, description: 'Modern syntax, async/await, modules' },
-        { name: 'Tailwind CSS', level: 85, description: 'Utility-first, responsive design, customization' },
-        { name: 'HTML5/CSS3', level: 92, description: 'Semantic markup, flexbox, grid, animations' },
-        { name: 'Next.js', level: 65, description: 'Currently learning - SSR, API routes' },
+        { name: 'Tailwind CSS', level: 85, description: 'Utility-first, responsive design' },
+        { name: 'HTML5/CSS3', level: 92, description: 'Semantic markup, animations' },
+        { name: 'Next.js', level: 65, description: 'SSR, API routes, static generation' },
       ]
     },
     {
       icon: Database,
       title: 'Backend & Database',
-      color: 'from-green-500 to-emerald-500',
+      color: 'from-green-400 to-emerald-500',
       skills: [
-        { name: 'Python (Flask)', level: 87, description: 'RESTful APIs, authentication, ORM' },
-        { name: 'PostgreSQL', level: 82, description: 'Database design, queries, optimization' },
-        { name: 'RESTful APIs', level: 85, description: 'API design, documentation, testing' },
-        { name: 'MongoDB', level: 75, description: 'NoSQL, aggregation, data modeling' },
-        { name: 'Node.js', level: 70, description: 'Express.js, middleware, package management' },
+        { name: 'Python (Flask/Django)', level: 88, description: 'REST APIs, authentication, ORM' },
+        { name: 'PostgreSQL/MySQL', level: 85, description: 'Database design, optimization' },
+        { name: 'RESTful API Design', level: 87, description: 'API architecture, documentation' },
+        { name: 'MongoDB/Firebase', level: 78, description: 'NoSQL databases, real-time data' },
+        { name: 'Node.js/Express', level: 75, description: 'Backend services, middleware' },
       ]
     },
     {
       icon: Cpu,
       title: 'AI & Emerging Tech',
-      color: 'from-purple-500 to-pink-500',
+      color: 'from-purple-400 to-pink-500',
       skills: [
-        { name: 'Generative AI', level: 60, description: 'Text/image generation, prompt engineering' },
+        { name: 'Generative AI', level: 60, description: 'Text/image generation, prompts' },
         { name: 'Jaseci/Jac Language', level: 55, description: 'AI application development' },
-        { name: 'ByLLM Integration', level: 50, description: 'Large language model integration' },
-        { name: 'AI Application Architecture', level: 45, description: 'Designing AI-powered systems' },
-        { name: 'API Design', level: 80, description: 'REST, GraphQL, documentation' },
+        { name: 'ByLLM Integration', level: 50, description: 'Large language models' },
+        { name: 'AI Architecture', level: 45, description: 'Designing AI-powered systems' },
+        { name: 'System Design', level: 80, description: 'Scalable architecture, microservices' },
       ]
     },
     {
       icon: Cloud,
       title: 'DevOps & Tools',
-      color: 'from-orange-500 to-red-500',
+      color: 'from-orange-400 to-red-500',
       skills: [
-        { name: 'Git/GitHub', level: 88, description: 'Version control, collaboration, workflows' },
+        { name: 'Git/GitHub', level: 88, description: 'Version control, workflows' },
         { name: 'Vercel/Render', level: 85, description: 'Production deployment, CI/CD' },
-        { name: 'Postman', level: 80, description: 'API testing, documentation, automation' },
-        { name: 'Figma', level: 75, description: 'UI/UX design, prototyping, collaboration' },
-        { name: 'Netlify', level: 70, description: 'Static site deployment, forms, functions' },
+        { name: 'Postman', level: 80, description: 'API testing, documentation' },
+        { name: 'Figma', level: 75, description: 'UI/UX design, prototyping' },
+        { name: 'AWS Basics', level: 70, description: 'Cloud deployment, S3, EC2' },
       ]
     }
   ];
 
   const softSkills = [
-    {
-      name: 'Problem Solving',
-      level: 95,
-      description: 'Analytical thinking and creative solutions'
-    },
-    {
-      name: 'Project Management',
-      level: 85,
-      description: 'Agile methodologies and team leadership'
-    },
-    {
-      name: 'Communication',
-      level: 90,
-      description: 'Technical documentation and client relations'
-    },
-    {
-      name: 'Adaptability',
-      level: 88,
-      description: 'Quick learning and technology adoption'
-    }
+    { name: 'Problem Solving', level: 95, description: 'Analytical thinking and creative solutions' },
+    { name: 'Project Management', level: 85, description: 'Agile methodologies and leadership' },
+    { name: 'Technical Communication', level: 90, description: 'Documentation, collaboration' },
+    { name: 'Adaptability', level: 88, description: 'Quick learning and tech adoption' }
   ];
 
   const ProgressBar = ({ level, color, delay = 0 }) => (
-    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+    <div className="relative w-full h-2 bg-white/5 rounded-full overflow-hidden backdrop-blur-xl">
       <motion.div
         initial={{ width: 0 }}
         animate={isVisible ? { width: `${level}%` } : { width: 0 }}
         transition={{ duration: 1.5, delay, ease: "easeOut" }}
-        className={`h-full rounded-full bg-gradient-to-r ${color} shadow-lg`}
-      />
+        className={`h-full rounded-full bg-gradient-to-r ${color} relative`}
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"></div>
+      </motion.div>
     </div>
   );
 
@@ -114,87 +100,64 @@ const Skills = () => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
       viewport={{ once: true }}
-      whileHover={{ y: -5, scale: 1.02 }}
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300"
+      whileHover={{ y: -8, scale: 1.02 }}
+      className="group p-8 bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 hover:border-white/20 transition-all duration-500 relative overflow-hidden"
     >
-      <div className={`w-14 h-14 bg-gradient-to-r ${category.color} rounded-2xl flex items-center justify-center mb-4`}>
-        <category.icon size={28} className="text-white" />
-      </div>
+      <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
       
-      <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-6">
-        {category.title}
-      </h3>
-
-      <div className="space-y-4">
-        {category.skills.map((skill, skillIndex) => (
-          <div key={skill.name} className="space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {skill.name}
-              </span>
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={isVisible ? { opacity: 1 } : { opacity: 0 }}
-                transition={{ duration: 0.5, delay: 1 + (skillIndex * 0.1) }}
-                className="text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
-              >
-                {skill.level}%
-              </motion.span>
-            </div>
-            <ProgressBar 
-              level={skill.level} 
-              color={category.color}
-              delay={0.5 + (skillIndex * 0.1)}
-            />
-            <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-              {skill.description}
-            </p>
-          </div>
-        ))}
-      </div>
-    </motion.div>
-  );
-
-  const SoftSkillCard = ({ skill, index }) => (
-    <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      viewport={{ once: true }}
-      className="flex items-center gap-4 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700"
-    >
-      <div className="flex-1 space-y-2">
-        <div className="flex justify-between items-center">
-          <span className="font-semibold text-gray-700 dark:text-gray-300">
-            {skill.name}
-          </span>
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={isVisible ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.5, delay: 1 + (index * 0.1) }}
-            className="text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
-          >
-            {skill.level}%
-          </motion.span>
+      <div className="relative z-10">
+        <div className={`w-16 h-16 bg-gradient-to-br ${category.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+          <category.icon size={32} className="text-white" />
         </div>
-        <ProgressBar 
-          level={skill.level} 
-          color="from-green-500 to-emerald-500"
-          delay={0.8 + (index * 0.1)}
-        />
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          {skill.description}
-        </p>
+        
+        <h3 className="text-2xl font-black text-white mb-8 tracking-tight">
+          {category.title}
+        </h3>
+
+        <div className="space-y-5">
+          {category.skills.map((skill, skillIndex) => (
+            <div key={skill.name} className="space-y-2">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-bold text-gray-300 tracking-wide">
+                  {skill.name}
+                </span>
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={isVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.5, delay: 0.8 + (skillIndex * 0.1) }}
+                  className={`text-sm font-black bg-gradient-to-r ${category.color} bg-clip-text text-transparent`}
+                >
+                  {skill.level}%
+                </motion.span>
+              </div>
+              <ProgressBar 
+                level={skill.level} 
+                color={category.color}
+                delay={0.3 + (skillIndex * 0.1)}
+              />
+              <p className="text-xs text-gray-500 leading-relaxed">
+                {skill.description}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </motion.div>
   );
 
   return (
-    <section id="skills" className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 -z-10 opacity-5">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl animate-float"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-500 rounded-full mix-blend-multiply filter blur-xl animate-float" style={{ animationDelay: '2s' }}></div>
+    <section id="skills" className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f] via-cyan-950/10 to-[#0a0a0f]"></div>
+        <motion.div
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.1, 0.2, 0.1]
+          }}
+          transition={{ duration: 12, repeat: Infinity }}
+          className="absolute -top-1/4 -left-1/4 w-[800px] h-[800px] bg-gradient-to-br from-cyan-500/20 to-transparent rounded-full blur-3xl"
+        ></motion.div>
       </div>
 
       <div className="max-w-7xl mx-auto">
@@ -204,20 +167,24 @@ const Skills = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Technical Skills
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 backdrop-blur-xl rounded-full border border-cyan-500/20 mb-6">
+            <Code size={16} className="text-cyan-400" />
+            <span className="text-sm font-bold tracking-wide text-cyan-400">EXPERTISE</span>
+          </div>
+          <h2 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter mb-6">
+            <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              TECHNICAL SKILLS
             </span>
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto font-light">
             Mastering modern technologies to build scalable, efficient, and innovative solutions
           </p>
         </motion.div>
 
         {/* Technical Skills Grid */}
-        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-8 mb-16">
+        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6 mb-20">
           {skillCategories.map((category, index) => (
             <SkillCard key={category.title} category={category} index={index} />
           ))}
@@ -229,92 +196,110 @@ const Skills = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="mb-16"
+          className="relative group mb-20"
         >
-          <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl p-8 text-white relative overflow-hidden">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute -top-20 -right-20 w-40 h-40 bg-white rounded-full"></div>
-              <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-white rounded-full"></div>
-            </div>
-
+          <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 rounded-3xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
+          <div className="relative p-10 bg-gradient-to-br from-purple-900/50 to-pink-900/50 backdrop-blur-2xl rounded-3xl border border-white/10 overflow-hidden">
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30"></div>
+            
             <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-6">
-                <TrendingUp size={32} className="text-yellow-300" />
-                <h3 className="text-2xl font-bold">Professional Skills</h3>
+              <div className="flex items-center gap-3 mb-10">
+                <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl">
+                  <TrendingUp size={28} className="text-white" />
+                </div>
+                <h3 className="text-3xl font-black text-white tracking-tight">PROFESSIONAL SKILLS</h3>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
                 {softSkills.map((skill, index) => (
-                  <SoftSkillCard key={skill.name} skill={skill} index={index} />
+                  <motion.div
+                    key={skill.name}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    className="p-6 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 hover:border-white/20 transition-all duration-300"
+                  >
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="font-bold text-white">{skill.name}</span>
+                        <motion.span
+                          initial={{ opacity: 0 }}
+                          animate={isVisible ? { opacity: 1 } : { opacity: 0 }}
+                          transition={{ duration: 0.5, delay: 1 + (index * 0.1) }}
+                          className="text-sm font-black bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent"
+                        >
+                          {skill.level}%
+                        </motion.span>
+                      </div>
+                      <ProgressBar 
+                        level={skill.level} 
+                        color="from-cyan-400 via-purple-400 to-pink-400"
+                        delay={0.5 + (index * 0.1)}
+                      />
+                      <p className="text-xs text-gray-400">{skill.description}</p>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
           </div>
         </motion.div>
 
-        {/* Learning Journey */}
+        {/* Career Focus */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8"
+          className="p-10 bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10"
         >
-          <div className="flex items-center gap-3 mb-6">
-            <Rocket size={32} className="text-purple-600" />
-            <h3 className="text-2xl font-bold text-gray-800 dark:text-white">Current Learning Focus</h3>
+          <div className="flex items-center gap-3 mb-8">
+            <div className="p-3 bg-gradient-to-br from-cyan-500 to-purple-500 rounded-xl">
+              <Rocket size={28} className="text-white" />
+            </div>
+            <h3 className="text-3xl font-black text-white tracking-tight">CAREER FOCUS & GOALS</h3>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-10">
             <div>
-              <h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
-                <Zap size={20} className="text-yellow-500" />
-                Generative AI & Advanced Development
+              <h4 className="text-lg font-black text-white mb-6 flex items-center gap-2">
+                <Zap size={20} className="text-cyan-400" />
+                CURRENT SPECIALIZATION
               </h4>
-              <ul className="space-y-3 text-gray-600 dark:text-gray-300">
-                <li className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  Advanced Next.js and TypeScript
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  Jaseci AI framework and Jac language
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  Generative AI application architecture
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  Advanced API design and microservices
-                </li>
-              </ul>
+              <div className="space-y-4">
+                {[
+                  'Full-Stack Development: React + Flask/Python',
+                  'Database Architecture: PostgreSQL & MongoDB',
+                  'Cloud Deployment: Vercel, Render, AWS',
+                  'Generative AI: Building intelligent applications'
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-3 p-4 bg-white/5 rounded-xl border border-white/10">
+                    <div className="w-2 h-2 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <span className="text-gray-300">{item}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div>
-              <h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
-                <TrendingUp size={20} className="text-blue-500" />
-                Career Growth Goals
+              <h4 className="text-lg font-black text-white mb-6 flex items-center gap-2">
+                <Sparkles size={20} className="text-purple-400" />
+                GROWTH & DEVELOPMENT
               </h4>
-              <ul className="space-y-3 text-gray-600 dark:text-gray-300">
-                <li className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                  Lead full-stack development projects
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                  Specialize in AI-integrated applications
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                  Mentor junior developers in the community
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                  Contribute to open-source AI projects
-                </li>
-              </ul>
+              <div className="space-y-4">
+                {[
+                  'Deepening expertise in Generative AI applications',
+                  'Mastering advanced React patterns and Next.js',
+                  'Expanding cloud architecture knowledge (AWS)',
+                  'Contributing to open-source projects'
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-3 p-4 bg-white/5 rounded-xl border border-white/10">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <span className="text-gray-300">{item}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </motion.div>
