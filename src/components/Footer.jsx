@@ -1,77 +1,47 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Code, Coffee, ArrowUp, Mail, Github, Linkedin, ExternalLink, Sparkles } from 'lucide-react';
 
-const Footer = () => {
-  const currentYear = new Date().getFullYear();
+// ✅ Static data outside component
+const quickLinks = [
+  { name: 'Home',     href: '#home' },
+  { name: 'About',    href: '#about' },
+  { name: 'Skills',   href: '#skills' },
+  { name: 'Projects', href: '#projects' },
+  { name: 'Pricing',  href: '#pricing' },
+  { name: 'Contact',  href: '#contact' },
+];
 
-  const quickLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Skills', href: '#skills' },      
-    { name: 'Projects', href: '#projects' }, 
-    { name: 'Pricing', href: '#pricing' },
-    { name: 'Contact', href: '#contact' }
-  ];
+const socialLinks = [
+  { icon: Github,      href: 'https://github.com/ngoriest',              label: 'GitHub',   color: 'from-gray-400 to-gray-600' },
+  { icon: Linkedin,    href: 'https://www.linkedin.com/in/manase-kimutai',label: 'LinkedIn', color: 'from-cyan-400 to-blue-500' },
+  { icon: Mail,        href: 'mailto:thee.manase@gmail.com',              label: 'Email',    color: 'from-red-400 to-pink-500' },
+  { icon: ExternalLink,href: 'https://dikoras.com',                       label: 'Dikoras',  color: 'from-green-400 to-emerald-500' },
+];
 
-  const socialLinks = [
-    {
-      icon: Github,
-      href: 'https://github.com/ngoriest',
-      label: 'GitHub',
-      color: 'from-gray-400 to-gray-600'
-    },
-    {
-      icon: Linkedin,
-      href: 'https://www.linkedin.com/in/manase-kimutai',
-      label: 'LinkedIn',
-      color: 'from-cyan-400 to-blue-500'
-    },
-    {
-      icon: Mail,
-      href: 'mailto:thee.manase@gmail.com',
-      label: 'Email',
-      color: 'from-red-400 to-pink-500'
-    },
-    {
-      icon: ExternalLink,
-      href: 'https://dikoras.com',
-      label: 'Dikoras',
-      color: 'from-green-400 to-emerald-500'
-    }
-  ];
+const currentYear = new Date().getFullYear();
 
-  const scrollToTop = () => {
+const Footer = memo(() => {
+  const scrollToSection = useCallback((href) => {
+    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
+
+  const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const scrollToSection = (href) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  }, []);
 
   return (
     <footer className="relative overflow-hidden bg-[#0a0a0f] border-t border-white/5">
-      {/* Background */}
+      {/* ✅ CSS animations instead of Framer Motion infinite loops */}
       <div className="absolute inset-0 -z-10">
-        <motion.div
-          animate={{ 
-            scale: [1, 1.1, 1],
-            opacity: [0.05, 0.1, 0.05]
-          }}
-          transition={{ duration: 15, repeat: Infinity }}
-          className="absolute top-0 left-0 w-[600px] h-[600px] bg-gradient-to-br from-purple-500/20 to-transparent rounded-full blur-3xl"
-        ></motion.div>
-        <motion.div
-          animate={{ 
-            scale: [1.1, 1, 1.1],
-            opacity: [0.05, 0.1, 0.05]
-          }}
-          transition={{ duration: 12, repeat: Infinity }}
-          className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-gradient-to-tl from-cyan-500/20 to-transparent rounded-full blur-3xl"
-        ></motion.div>
+        <div
+          className="absolute top-0 left-0 w-[600px] h-[600px] bg-gradient-to-br from-purple-500/15 to-transparent rounded-full blur-3xl opacity-10 animate-pulse"
+          style={{ animationDuration: '12s' }}
+        />
+        <div
+          className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-gradient-to-tl from-cyan-500/15 to-transparent rounded-full blur-3xl opacity-10 animate-pulse"
+          style={{ animationDuration: '10s', animationDelay: '2s' }}
+        />
       </div>
 
       <div className="relative z-10">
@@ -104,8 +74,7 @@ const Footer = () => {
                 whileTap={{ scale: 0.95 }}
                 className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 text-white rounded-full font-black hover:shadow-lg transition-all"
               >
-                <Mail size={20} />
-                GET IN TOUCH
+                <Mail size={20} /> GET IN TOUCH
               </motion.a>
             </motion.div>
           </div>
@@ -114,7 +83,7 @@ const Footer = () => {
         {/* Main Footer Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="grid md:grid-cols-3 gap-12 items-start">
-            {/* Brand Section */}
+            {/* Brand */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -124,8 +93,7 @@ const Footer = () => {
             >
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <div className="w-2 h-2 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 rounded-full animate-pulse"></div>
-                  <div className="absolute inset-0 w-2 h-2 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 rounded-full blur-md animate-pulse"></div>
+                  <div className="w-2 h-2 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 rounded-full animate-pulse" />
                 </div>
                 <span className="text-2xl font-black tracking-tight bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                   MANASE KIMUTAI
@@ -143,11 +111,11 @@ const Footer = () => {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.1, y: -3 }}
                     whileTap={{ scale: 0.9 }}
-                    className={`group p-3 bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 hover:border-white/20 transition-all relative overflow-hidden`}
+                    className="group p-3 bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 hover:border-white/20 transition-all relative overflow-hidden"
                     aria-label={social.label}
                   >
-                    <div className={`absolute inset-0 bg-gradient-to-br ${social.color} opacity-0 group-hover:opacity-20 transition-opacity`}></div>
-                    <social.icon size={20} className={`relative z-10 text-gray-400 group-hover:text-white transition-colors`} />
+                    <div className={`absolute inset-0 bg-gradient-to-br ${social.color} opacity-0 group-hover:opacity-20 transition-opacity`} />
+                    <social.icon size={20} className="relative z-10 text-gray-400 group-hover:text-white transition-colors" />
                   </motion.a>
                 ))}
               </div>
@@ -169,7 +137,7 @@ const Footer = () => {
                       onClick={() => scrollToSection(link.href)}
                       className="text-gray-400 hover:text-white transition-colors font-bold text-sm group flex items-center gap-2"
                     >
-                      <div className="w-1.5 h-1.5 bg-gray-600 rounded-full group-hover:bg-cyan-400 transition-colors"></div>
+                      <div className="w-1.5 h-1.5 bg-gray-600 rounded-full group-hover:bg-cyan-400 transition-colors" />
                       {link.name}
                     </button>
                   </li>
@@ -212,7 +180,6 @@ const Footer = () => {
         <div className="border-t border-white/5">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-              {/* Copyright */}
               <motion.div
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
@@ -224,18 +191,13 @@ const Footer = () => {
                 <span className="hidden sm:inline">•</span>
                 <div className="flex items-center gap-2">
                   <span>Made with</span>
-                  <motion.div
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 1, repeat: Infinity, repeatDelay: 2 }}
-                  >
-                    <Heart size={14} className="text-red-400 fill-red-400" />
-                  </motion.div>
+                  {/* ✅ CSS animation instead of Framer Motion repeat: Infinity */}
+                  <Heart size={14} className="text-red-400 fill-red-400 animate-pulse" style={{ animationDuration: '1s' }} />
                   <Code size={14} className="text-cyan-400" />
                   <Coffee size={14} className="text-yellow-400" />
                 </div>
               </motion.div>
 
-              {/* Back to Top */}
               <motion.button
                 onClick={scrollToTop}
                 whileHover={{ scale: 1.05, y: -2 }}
@@ -244,16 +206,11 @@ const Footer = () => {
                 aria-label="Back to top"
               >
                 <span>BACK TO TOP</span>
-                <motion.div
-                  animate={{ y: [0, -3, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  <ArrowUp size={16} />
-                </motion.div>
+                {/* ✅ CSS animation */}
+                <ArrowUp size={16} className="animate-bounce" style={{ animationDuration: '2s' }} />
               </motion.button>
             </div>
 
-            {/* Tech Stack Mention */}
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -269,7 +226,6 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Decorative Elements */}
       <div className="absolute bottom-10 left-10 opacity-5 pointer-events-none">
         <Code size={60} className="text-white" />
       </div>
@@ -278,6 +234,7 @@ const Footer = () => {
       </div>
     </footer>
   );
-};
+});
 
+Footer.displayName = 'Footer';
 export default Footer;

@@ -1,103 +1,89 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 
-// Components
+// ✅ LAZY LOAD all sections - they only load when needed
+// Hero loads immediately (above the fold), everything else is deferred
 import Hero from './components/Hero';
-import About from './components/About';
-import Skills from './components/Skills';
-import Projects from './components/Projects';
-import Pricing from './components/Pricing';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
+const About    = lazy(() => import('./components/About'));
+const Skills   = lazy(() => import('./components/Skills'));
+const Projects = lazy(() => import('./components/Projects'));
+const Pricing  = lazy(() => import('./components/Pricing'));
+const Contact  = lazy(() => import('./components/Contact'));
+const Footer   = lazy(() => import('./components/Footer'));
+
+// Minimal fallback - no layout shift, matches dark bg
+const SectionFallback = () => (
+  <div className="w-full py-24 flex items-center justify-center">
+    <div className="w-8 h-8 border-2 border-purple-500/40 border-t-purple-400 rounded-full animate-spin" />
+  </div>
+);
+
+const navItems = [
+  { name: 'Home',     href: '#home',     id: 'home' },
+  { name: 'About',    href: '#about',    id: 'about' },
+  { name: 'Skills',   href: '#skills',   id: 'skills' },
+  { name: 'Projects', href: '#projects', id: 'projects' },
+  { name: 'Pricing',  href: '#pricing',  id: 'pricing' },
+  { name: 'Contact',  href: '#contact',  id: 'contact' },
+];
 
 function App() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
+  const [mobileMenuOpen, setMobileMenuOpen]   = useState(false);
+  const [activeSection, setActiveSection]     = useState('home');
   const [selectedPackage, setSelectedPackage] = useState(null);
-  const [isManualScroll, setIsManualScroll] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled]               = useState(false);
 
   useEffect(() => {
-    // Check for stored package selection
-    const storedPackage = localStorage.getItem('selectedPackage');
-    if (storedPackage) {
-      setSelectedPackage(JSON.parse(storedPackage));
-    }
-
-    // Set dark mode permanently on body
     document.documentElement.classList.add('dark');
 
-    // Handle scroll for navbar glass effect
+    // ✅ Throttled scroll handler - fires at most once per animation frame
+    let ticking = false;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-
-    // Intersection Observer for active section
-    const sections = document.querySelectorAll('section[id]');
-    const observerOptions = {
-      root: null,
-      rootMargin: '-40% 0px -60% 0px',
-      threshold: 0
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      if (!isManualScroll) {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 20);
+          ticking = false;
         });
+        ticking = true;
       }
-    }, observerOptions);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
-    sections.forEach(section => observer.observe(section));
+    // Active section observer
+    const sections = document.querySelectorAll('section[id]');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) setActiveSection(entry.target.id);
+      });
+    }, { rootMargin: '-40% 0px -60% 0px', threshold: 0 });
+
+    sections.forEach(s => observer.observe(s));
 
     return () => {
       observer.disconnect();
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [isManualScroll]);
+  }, []);
 
-  const navItems = [
-    { name: 'Home', href: '#home', id: 'home' },
-    { name: 'About', href: '#about', id: 'about' },
-    { name: 'Skills', href: '#skills', id: 'skills' },
-    { name: 'Projects', href: '#projects', id: 'projects' },
-    { name: 'Pricing', href: '#pricing', id: 'pricing' },
-    { name: 'Contact', href: '#contact', id: 'contact' },
-  ];
-
-  const scrollToSection = (href, id) => {
-    setIsManualScroll(true);
+  // ✅ useCallback prevents re-creating this function on every render
+  const scrollToSection = useCallback((href, id) => {
     setActiveSection(id);
-    
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
+    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     setMobileMenuOpen(false);
-    
-    setTimeout(() => {
-      setIsManualScroll(false);
-    }, 1000);
-  };
+  }, []);
 
-  const handlePackageSelect = (pkg) => {
+  // ✅ Package selection no longer touches localStorage on every mount
+  const handlePackageSelect = useCallback((pkg) => {
     setSelectedPackage(pkg);
-    localStorage.setItem('selectedPackage', JSON.stringify(pkg));
-  };
+  }, []);
 
   return (
     <div className="min-h-screen dark bg-[#0a0a0f]">
-      {/* Navigation - Glassmorphism */}
+      {/* Navigation */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-        scrolled 
-          ? 'bg-black/20 backdrop-blur-2xl border-b border-white/5 shadow-2xl shadow-purple-500/5' 
+        scrolled
+          ? 'bg-black/20 backdrop-blur-2xl border-b border-white/5 shadow-2xl shadow-purple-500/5'
           : 'bg-transparent'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -109,24 +95,21 @@ function App() {
               onClick={() => scrollToSection('#home', 'home')}
             >
               <div className="relative">
-                <div className="w-2 h-2 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 rounded-full animate-pulse"></div>
-                <div className="absolute inset-0 w-2 h-2 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 rounded-full blur-md animate-pulse"></div>
+                <div className="w-2 h-2 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 rounded-full animate-pulse" />
+                <div className="absolute inset-0 w-2 h-2 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 rounded-full blur-md animate-pulse" />
               </div>
               <span className="text-xl font-black tracking-tight bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300">
                 MANASE KIMUTAI
               </span>
             </motion.div>
 
-            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-2">
               {navItems.map((item) => (
                 <button
                   key={item.name}
                   onClick={() => scrollToSection(item.href, item.id)}
                   className={`relative px-5 py-2.5 text-sm font-bold tracking-wide transition-all duration-300 rounded-xl overflow-hidden group ${
-                    activeSection === item.id
-                      ? 'text-white'
-                      : 'text-gray-400 hover:text-white'
+                    activeSection === item.id ? 'text-white' : 'text-gray-400 hover:text-white'
                   }`}
                 >
                   {activeSection === item.id && (
@@ -134,17 +117,16 @@ function App() {
                       layoutId="activeSection"
                       className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 backdrop-blur-xl border border-white/10"
                       initial={false}
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                       style={{ borderRadius: '0.75rem' }}
                     />
                   )}
                   <span className="relative z-10">{item.name}</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-purple-500/0 to-pink-500/0 group-hover:from-cyan-500/10 group-hover:via-purple-500/10 group-hover:to-pink-500/10 transition-all duration-300 rounded-xl"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-purple-500/0 to-pink-500/0 group-hover:from-cyan-500/10 group-hover:via-purple-500/10 group-hover:to-pink-500/10 transition-all duration-300 rounded-xl" />
                 </button>
               ))}
             </div>
 
-            {/* Mobile Menu Button */}
             <button
               className="md:hidden p-2.5 text-gray-300 hover:text-white transition-colors rounded-xl hover:bg-white/5"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -155,7 +137,6 @@ function App() {
           </div>
         </div>
 
-        {/* Mobile Menu - Glassmorphism */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
@@ -184,17 +165,35 @@ function App() {
         </AnimatePresence>
       </nav>
 
-      {/* Main Content */}
+      {/* Main Content - each section is lazy loaded inside Suspense */}
       <main className="pt-16">
+        {/* Hero is NOT lazy - it's above the fold and must render immediately */}
         <Hero />
-        <About />
-        <Skills />
-        <Projects />
-        <Pricing onPackageSelect={handlePackageSelect} />
-        <Contact selectedPackage={selectedPackage} />
+
+        <Suspense fallback={<SectionFallback />}>
+          <About />
+        </Suspense>
+
+        <Suspense fallback={<SectionFallback />}>
+          <Skills />
+        </Suspense>
+
+        <Suspense fallback={<SectionFallback />}>
+          <Projects />
+        </Suspense>
+
+        <Suspense fallback={<SectionFallback />}>
+          <Pricing onPackageSelect={handlePackageSelect} />
+        </Suspense>
+
+        <Suspense fallback={<SectionFallback />}>
+          <Contact selectedPackage={selectedPackage} />
+        </Suspense>
       </main>
 
-      <Footer />
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
     </div>
   );
 }
